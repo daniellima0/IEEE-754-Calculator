@@ -18,9 +18,18 @@ def converterDecimalParaBinario(decimal):
 tipo = 32  # 32 bits
 numero = input("Digite um número decimal: ")  # supondo número 263.3
 
+# salva o sinal do número
+if float(numero) >= 0:
+    sinal = "0"
+else:
+    sinal = "1"
+
+# transforma o número inserido em positivo para realizar os cálculos
+numero = abs(float(numero))
+
 # Passo 1: Tranformar as partes inteira e decimal em binário
-inteiro = numero.split(".")[0]  # 263
-decimal = float(numero) - int(inteiro)  # 0.3
+inteiro = str(numero).split(".")[0]  # 263
+decimal = numero - int(inteiro)  # 0.3
 
 print("\nParte inteira:", inteiro)
 print("Parte decimal:", decimal)
@@ -33,10 +42,6 @@ print("\nParte inteira em binário:", inteiro_binario)
 print("Parte decimal em binário:", decimal_binario)
 
 # Passo 2: Encontrar as devidas partes da representação (Sinal, Expoente e Mantissa)
-if float(numero) >= 0:
-    sinal = "0"
-else:
-    sinal = "1"
 print("\nSinal:", sinal)
 
 qtd_algarismo_significativo = 1  # número de algarismos significativos da notação científica
@@ -55,5 +60,5 @@ print("\nResultado:", numero_convertido, "\n")
 
 # To Do List:
 # - Descobrir por que a parte decimal adquire uns números nas casas mais à direita
-# - Implementar código para números negativos
+# - Converter resultado em binário para hexadecimal
 # - Criar uma versão para 64 bits
