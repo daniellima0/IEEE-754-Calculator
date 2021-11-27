@@ -93,5 +93,3 @@ print("\nResultado em hexadecimal:", resultado_hexadecimal, "\n")
 
 # To Do List:
 # - Descobrir por que a parte decimal adquire uns números nas casas mais à direita
-# - Converter resultado em binário para hexadecimal
-# - Criar uma versão para 64 bits
