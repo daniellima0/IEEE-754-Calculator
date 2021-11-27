@@ -60,8 +60,7 @@ numero = abs(
 inteiro = str(numero).split(".")[0]
 decimal = numero - int(inteiro)
 inteiro_binario = bin(int(inteiro)).lstrip("0b")
-decimal_binario = converterDecimalParaBinario(decimal,
-                                              tipo)
+decimal_binario = converterDecimalParaBinario(decimal, tipo)
 
 # Passo 2: Encontrar as devidas partes da representação (Sinal, Expoente e Mantissa)
 print("\nSinal:", sinal)
@@ -77,8 +76,7 @@ elif tipo == 64:
 expoente = bin(bias + comprimento_expoente).lstrip("0b")
 print("Expoente:", expoente)
 
-mantissa = inteiro_binario[
-    1:] + decimal_binario
+mantissa = inteiro_binario[1:] + decimal_binario
 if tipo == 32:
     mantissa_aproximada = mantissa[0:23]
 elif tipo == 64:
@@ -86,11 +84,12 @@ elif tipo == 64:
 print("Mantissa:", mantissa_aproximada)
 
 # Passo 3: Juntar todas as partes
-numero_convertido = sinal + expoente + mantissa_aproximada
-print("\nResultado em binário:", numero_convertido)
+resultado_binario = sinal + expoente + mantissa_aproximada
+print("\nResultado em binário:", resultado_binario)
 
 # Passo 4: Converter para hexadecimal
-# print("\nResultado em hexadecimal:", numero_convertido, "\n")
+resultado_hexadecimal = hex(int(resultado_binario, 2))
+print("\nResultado em hexadecimal:", resultado_hexadecimal, "\n")
 
 # To Do List:
 # - Descobrir por que a parte decimal adquire uns números nas casas mais à direita
