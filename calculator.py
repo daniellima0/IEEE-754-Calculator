@@ -24,7 +24,7 @@ while (True):
     try:
         escolha = float(
             input(
-                "Escolha uma opção:\n\n1) Notação de Ponto Flutuante (8 bits)\n2) Precisão de Ponto Flutuante IEEE754 32 bits\n3) Precisão de Ponto Flutuante IEEE754 64 bits\n\n-> "
+                "Escolha uma opção:\n\n1) Notação de Ponto Flutuante 8 bits (-7.9375 ~ +7.9375) \n2) Precisão de Ponto Flutuante IEEE754 32 bits \n3) Precisão de Ponto Flutuante IEEE754 64 bits\n\n-> "
             ))
     except:
         system('cls')
@@ -44,77 +44,115 @@ elif (escolha == 3):
     tipo = 64
 
 # Inserção do número a ser convertido
-try:
-    numero = float(input("\nDigite um número decimal:\n-> "))
-except:
-    print("Digite um número válido\n")
+if (tipo == 8):
+    while (True):
+        try:
+            numero = float(input("\nDigite um número decimal:\n-> "))
+        except:
+            print("Digite um número válido\n")
+            continue
+
+        if (numero > -7.9375 and numero < 7.9375):
+            break
+
+        print("\nOBS: Digite um valor dentro do permitido")
+else:
+    try:
+        numero = float(input("\nDigite um número decimal:\n-> "))
+    except:
+        print("Digite um número válido\n")
 
 if numero >= 0:  # salva o sinal do número
     sinal = "0"
+    simbolo = '+'
 else:
     sinal = "1"
+    simbolo = '-'
 
 numero = abs(
     numero
 )  # transforma o número inserido em positivo para realizar os cálculos
 
-# Passo 1: Tranformar as partes inteira e decimal em binário
-inteiro = str(numero).split(".")[0]
-decimal = float('0' + str(numero)[str(numero).index('.'):])
-inteiro_binario = bin(int(inteiro)).lstrip("0b")
-decimal_binario = converterDecimalParaBinario(decimal, tipo)
+if (tipo == 8):
+    # Notação de Ponto Flutuante (8 bits)
 
-# Passo 2: Encontrar as devidas partes da representação (Sinal, Expoente e Mantissa)
-print("\nSinal:", sinal)
+    inteiro = str(numero).split(".")[0]
+    decimal = float('0' + str(numero)[str(numero).index('.'):])
+    inteiro_binario = bin(int(inteiro)).lstrip("0b")
 
-qtd_algarismo_significativo = 1  # número de algarismos significativos da notação científica
+    while len(inteiro_binario) < 3:
+        inteiro_binario = '0' + inteiro_binario
 
-if numero >= 1:
-    expoente = len(inteiro_binario) - qtd_algarismo_significativo  # 8
-elif numero < 1 and numero > 0:
-    qtd_zeros_a_direita = -1
+    decimal_binario = converterDecimalParaBinario(decimal, tipo)
+    decimal_binario = decimal_binario[0:4]
 
-    for letter in str(decimal):
-        if letter == '0':
-            qtd_zeros_a_direita += 1
+    print("\nSinal:", sinal)
+    print("Parte inteira:", inteiro_binario)
+    print("Parte decimal:", decimal_binario)
 
-    expoente = qtd_zeros_a_direita + 1
+    # Passo 3: Juntar todas as partes
+    resultado_binario = simbolo + inteiro_binario + '.' + decimal_binario
+    print("\nResultado em binário:", resultado_binario)
 
-if tipo == 32:
-    bias = 127
-elif tipo == 64:
-    bias = 1023
+    # Passo 4: Converter para hexadecimal
+    resultado_hexadecimal = hex(int(resultado_binario.replace('.', ''), 2))
+    print("\nResultado em hexadecimal:", resultado_hexadecimal, "\n")
 
-if numero >= 1:
-    expoente_binario = bin(bias + expoente).lstrip("0b")
-elif numero < 1 and numero > 0:
-    expoente_binario = bin(bias - expoente).lstrip("0b")
+else:
+    # Precisão de Ponto Flutuante IEEE754
 
-while len(str(expoente_binario)) < 8:
-    expoente_binario = '0' + expoente_binario
+    # Passo 1: Tranformar as partes inteira e decimal em binário
+    inteiro = str(numero).split(".")[0]
+    decimal = float('0' + str(numero)[str(numero).index('.'):])
+    inteiro_binario = bin(int(inteiro)).lstrip("0b")
+    decimal_binario = converterDecimalParaBinario(decimal, tipo)
 
-print("Expoente:", expoente_binario)
+    # Passo 2: Encontrar as devidas partes da representação (Sinal, Expoente e Mantissa)
+    print("\nSinal:", sinal)
 
-if numero >= 1:
-    mantissa = inteiro_binario[1:] + decimal_binario
-elif numero < 1 and numero > 0:
-    mantissa = decimal_binario[expoente:]
+    qtd_algarismo_significativo = 1  # número de algarismos significativos da notação científica
 
-if tipo == 32:
-    mantissa_aproximada = mantissa[0:23]
-elif tipo == 64:
-    mantissa_aproximada = mantissa[0:52]
-print("Mantissa:", mantissa_aproximada)
+    if numero >= 1:
+        expoente = len(inteiro_binario) - qtd_algarismo_significativo  # 8
+    elif numero < 1 and numero > 0:
+        qtd_zeros_a_direita = -1
 
-# Passo 3: Juntar todas as partes
-resultado_binario = sinal + expoente_binario + mantissa_aproximada
-print("\nResultado em binário:", resultado_binario)
+        for letter in str(decimal):
+            if letter == '0':
+                qtd_zeros_a_direita += 1
 
-# Passo 4: Converter para hexadecimal
-resultado_hexadecimal = hex(int(resultado_binario, 2))
-print("\nResultado em hexadecimal:", resultado_hexadecimal, "\n")
+        expoente = qtd_zeros_a_direita + 1
 
-# To Do List:
-# - Implementar conversão para ponto fixo
-# - Implementar restrições de valores inseridos para cada caso de conversão (ponto fixo 8 bits, ponto flutuante 32 e 64)
-# - Descobrir por que a parte decimal adquire uns números nas casas mais à direita (não aparenta ser muito significante)
+    if tipo == 32:
+        bias = 127
+    elif tipo == 64:
+        bias = 1023
+
+    if numero >= 1:
+        expoente_binario = bin(bias + expoente).lstrip("0b")
+    elif numero < 1 and numero > 0:
+        expoente_binario = bin(bias - expoente).lstrip("0b")
+
+    while len(str(expoente_binario)) < 8:
+        expoente_binario = '0' + expoente_binario
+
+    print("Expoente:", expoente_binario)
+
+    if numero >= 1:
+        mantissa = inteiro_binario[1:] + decimal_binario
+    elif numero < 1 and numero > 0:
+        mantissa = decimal_binario[expoente:]
+
+    if tipo == 32:
+        mantissa_aproximada = mantissa[0:23]
+    elif tipo == 64:
+        mantissa_aproximada = mantissa[0:52]
+    print("Mantissa:", mantissa_aproximada)
+
+    # Passo 3: Juntar todas as partes
+    resultado_binario = sinal + expoente_binario + mantissa_aproximada
+    print("\nResultado em binário:", resultado_binario)
+
+    # Passo 4: Converter para hexadecimal
+    resultado_hexadecimal = hex(int(resultado_binario, 2))
+    print("\nResultado em hexadecimal:", resultado_hexadecimal, "\n")
