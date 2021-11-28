@@ -1,5 +1,4 @@
 from os import system
-import math
 
 
 def converterDecimalParaBinario(decimal, tipo):
