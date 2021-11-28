@@ -76,10 +76,12 @@ numero = abs(
 if (tipo == 8):
     # Notação de Ponto Flutuante (8 bits)
 
+    # Passo 1: Tranformar as partes inteira e decimal em binário
     inteiro = str(numero).split(".")[0]
     decimal = float('0' + str(numero)[str(numero).index('.'):])
     inteiro_binario = bin(int(inteiro)).lstrip("0b")
 
+    # Passo 2: Encontrar as devidas partes da representação (Sinal, Parte Inteira e Parte Decimal)
     while len(inteiro_binario) < 3:
         inteiro_binario = '0' + inteiro_binario
 
